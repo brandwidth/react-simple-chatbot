@@ -172,22 +172,22 @@ class ChatBot extends Component {
   }
 
   onNodeInserted = event => {
-    const { currentTarget: target } = event;
-    const { enableSmoothScroll } = this.props;
+    // const { currentTarget: target } = event;
+    // const { enableSmoothScroll } = this.props;
 
-    if (enableSmoothScroll && this.supportsScrollBehavior) {
-      target.scroll({
-        top: target.scrollHeight,
-        left: 0,
-        behavior: 'smooth'
-      });
-    } else {
-      target.scrollTop = target.scrollHeight;
-    }
+    // if (enableSmoothScroll && this.supportsScrollBehavior) {
+    //   target.scroll({
+    //     top: target.scrollHeight,
+    //     left: 0,
+    //     behavior: 'smooth'
+    //   });
+    // } else {
+    //   target.scrollTop = target.scrollHeight;
+    // }
   };
 
   onResize = () => {
-    this.content.scrollTop = this.content.scrollHeight;
+    //this.content.scrollTop = this.content.scrollHeight;
   };
 
   onRecognitionChange = value => {
