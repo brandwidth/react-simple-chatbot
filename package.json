@@ -1,6 +1,6 @@
 {
   "name": "react-simple-chatbot",
-  "version": "0.6.1",
+  "version": "1.0.2",
   "description": "React Simple Chatbot",
   "main": "dist/react-simple-chatbot.js",
   "scripts": {
@@ -34,21 +34,7 @@
       ".jsx"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/LucasBassetti/react-simple-chatbot"
-  },
-  "keywords": [
-    "react",
-    "chat",
-    "chatbot",
-    "conversational-ui"
-  ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/LucasBassetti/react-simple-chatbot/issues"
-  },
-  "homepage": "https://github.com/LucasBassetti/react-simple-chatbot#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
