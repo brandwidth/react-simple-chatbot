@@ -207,9 +207,9 @@ class ChatBot extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
-  getTriggeredStep = (trigger, value) => {
+  getTriggeredStep = (trigger, value, step) => {
     const steps = this.generateRenderedStepsById();
-    return typeof trigger === 'function' ? trigger({ value, steps }) : trigger;
+    return typeof trigger === 'function' ? trigger({ value, steps, step}) : trigger;
   };
 
   getStepMessage = message => {
@@ -255,14 +255,14 @@ class ChatBot extends Component {
       currentStep.hideExtraControl = data.hideExtraControl;
     }
     if (data && data.trigger) {
-      currentStep.trigger = this.getTriggeredStep(data.trigger, data.value);
+      currentStep.trigger = this.getTriggeredStep(data.trigger, data.value, data);
     }
 
     if (isEnd) {
       this.handleEnd();
     } else if (currentStep.options && data) {
       const option = currentStep.options.filter(o => o.value === data.value)[0];
-      const trigger = this.getTriggeredStep(option.trigger, currentStep.value);
+      const trigger = this.getTriggeredStep(option.trigger, currentStep.value, currentStep);
       delete currentStep.options;
 
       // replace choose option for user message
@@ -287,7 +287,7 @@ class ChatBot extends Component {
         renderedSteps.pop();
       }
 
-      const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value);
+      const trigger = this.getTriggeredStep(currentStep.trigger, currentStep.value, currentStep);
       let nextStep = Object.assign({}, steps[trigger]);
 
       if (nextStep.message) {
