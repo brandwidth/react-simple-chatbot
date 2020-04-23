@@ -51,13 +51,48 @@ class ChatBot extends Component {
       inputInvalid: false,
       speaking: false,
       recognitionEnable: props.recognitionEnable && Recognition.isSupported(),
-      defaultUserSettings: {}
+      defaultUserSettings: {},
+      keySeed: Math.random(),
     };
 
     this.speak = speakFn(props.speechSynthesis);
   }
 
   componentDidMount() {
+    const { recognitionEnable } = this.state;
+    const { recognitionLang } = this.props;
+
+    if (recognitionEnable) {
+      this.recognition = new Recognition(
+        this.onRecognitionChange,
+        this.onRecognitionEnd,
+        this.onRecognitionStop,
+        recognitionLang
+      );
+    }
+
+    this.supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style;
+
+    if (this.content) {
+      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
+      window.addEventListener('resize', this.onResize);
+    }
+
+    this.startOver();
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { opened, toggleFloating } = props;
+    if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
+      return {
+        ...state,
+        opened
+      };
+    }
+    return state;
+  }
+
+  startOver() {
     const { steps } = this.props;
     const {
       botDelay,
@@ -70,6 +105,8 @@ class ChatBot extends Component {
       userDelay
     } = this.props;
     const chatSteps = {};
+
+    this.props.onRef(this);
 
     const defaultBotSettings = { delay: botDelay, avatar: botAvatar };
     const defaultUserSettings = {
@@ -105,25 +142,6 @@ class ChatBot extends Component {
       chatSteps[firstStep.id].message = firstStep.message;
     }
 
-    const { recognitionEnable } = this.state;
-    const { recognitionLang } = this.props;
-
-    if (recognitionEnable) {
-      this.recognition = new Recognition(
-        this.onRecognitionChange,
-        this.onRecognitionEnd,
-        this.onRecognitionStop,
-        recognitionLang
-      );
-    }
-
-    this.supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style;
-
-    if (this.content) {
-      this.content.addEventListener('DOMNodeInserted', this.onNodeInserted);
-      window.addEventListener('resize', this.onResize);
-    }
-
     const { currentStep, previousStep, previousSteps, renderedSteps } = storage.getData(
       {
         cacheName,
@@ -149,26 +167,22 @@ class ChatBot extends Component {
       previousStep,
       previousSteps,
       renderedSteps,
-      steps: chatSteps
+      steps: chatSteps,
+      keySeed: Math.random(),
     });
   }
 
-  static getDerivedStateFromProps(props, state) {
-    const { opened, toggleFloating } = props;
-    if (toggleFloating !== undefined && opened !== undefined && opened !== state.opened) {
-      return {
-        ...state,
-        opened
-      };
-    }
-    return state;
-  }
-
   componentWillUnmount() {
+    this.props.onRef(undefined);
+
     if (this.content) {
       this.content.removeEventListener('DOMNodeInserted', this.onNodeInserted);
       window.removeEventListener('resize', this.onResize);
     }
+  }
+
+  resetChatBot() {
+    this.startOver();
   }
 
   onNodeInserted = event => {
@@ -525,7 +539,7 @@ class ChatBot extends Component {
   };
 
   renderStep = (step, index) => {
-    const { renderedSteps } = this.state;
+    const { renderedSteps, keySeed } = this.state;
     const {
       avatarStyle,
       bubbleStyle,
@@ -542,7 +556,7 @@ class ChatBot extends Component {
     if (component && !asMessage) {
       return (
         <CustomStep
-          key={index}
+          key={index+keySeed}
           speak={this.speak}
           step={step}
           steps={steps}
@@ -557,7 +571,7 @@ class ChatBot extends Component {
     if (options) {
       return (
         <OptionsStep
-          key={index}
+          key={index+keySeed}
           step={step}
           previousValue={previousStep.value}
           triggerNextStep={this.triggerNextStep}
@@ -568,7 +582,7 @@ class ChatBot extends Component {
 
     return (
       <TextStep
-        key={index}
+        key={index+keySeed}
         step={step}
         steps={steps}
         speak={this.speak}
