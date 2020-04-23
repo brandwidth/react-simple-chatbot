@@ -22,10 +22,16 @@ const steps = [
   }
 ];
 
+const Config = {
+  floating: true,
+  botDelay: 1000,
+  userDelay: 400,
+};
+
 const ThemedExample = () => (
   <ThemeProvider theme={otherFontTheme}>
     <React.StrictMode>
-      <ChatBot steps={steps} />
+      <ChatBot steps={steps} {...Config} />
     </React.StrictMode>
   </ThemeProvider>
 );
