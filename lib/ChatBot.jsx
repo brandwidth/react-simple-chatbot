@@ -638,7 +638,7 @@ class ChatBot extends Component {
       <Header className="rsc-header">
         <HeaderTitle className="rsc-header-title">{headerTitle}</HeaderTitle>
         {floating && (
-          <HeaderIcon className="rsc-header-close-button" onMouseUp={() => this.toggleChatBot(false)}>
+          <HeaderIcon className="rsc-header-close-button" onClick={() => this.toggleChatBot(false)}>
             <CloseIcon />
           </HeaderIcon>
         )}
@@ -670,7 +670,7 @@ class ChatBot extends Component {
             className="rsc-float-button"
             style={floatingStyle}
             opened={opened}
-            onMouseUp={() => this.toggleChatBot(true)}
+            onClick={() => this.toggleChatBot(true)}
           >
             {typeof floatingIcon === 'string' ? <FloatingIcon src={floatingIcon} /> : floatingIcon}
           </FloatButton>
@@ -719,7 +719,7 @@ class ChatBot extends Component {
                 <SubmitButton
                   className="rsc-submit-button"
                   style={submitButtonStyle}
-                  onMouseUp={this.handleSubmitButton}
+                  onClick={this.handleSubmitButton}
                   invalid={inputInvalid}
                   disabled={disabled}
                   speaking={speaking}
